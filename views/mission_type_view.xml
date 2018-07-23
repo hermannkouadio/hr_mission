@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+        <!-- Mission list view -->
+        <record model="ir.ui.view" id="hr_mission_type_list_view">
+            <field name="name">hr.mission_type.list</field>
+            <field name="model">hr.mission.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Missions Type">
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Mission form view -->
+        <record model="ir.ui.view" id="hr_mission_type_form_view">
+            <field name="name">hr.mission_type.form</field>
+            <field name="model">hr.mission.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Mission Type">
+                    <sheet>
+                        <group>
+                            <group colspan="4">
+                                <field name="name"/>
+                            </group>
+                            <group colspan="4">
+                                <field name="description"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

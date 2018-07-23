@@ -1,0 +1,102 @@
+<openerp>
+    <data>
+        <!-- Workflow action-->
+        <record model="workflow" id="wkf_mission">
+            <field name="name">HR Mission Workflow</field>
+            <field name="osv">hr.mission</field>
+            <field name="on_create">True</field>
+        </record>
+        <record model="workflow.activity" id="draft">
+            <field name="name">Draft</field>
+            <field name="wkf_id" ref="wkf_mission"/>
+            <field name="flow_start" eval="True"/>
+            <field name="kind">function</field>
+            <field name="action">action_draft()</field>
+        </record>
+        <record model="workflow.activity" id="to_approve">
+            <field name="name">To approve</field>
+            <field name="wkf_id" ref="wkf_mission"/>
+            <field name="kind">function</field>
+            <field name="action">action_to_approve()</field>
+        </record>
+        <record model="workflow.activity" id="approved">
+            <field name="name">Approved</field>
+            <field name="wkf_id" ref="wkf_mission"/>
+            <field name="kind">function</field>
+            <field name="action">action_approve()</field>
+        </record>
+        <record model="workflow.activity" id="rejected">
+            <field name="name">Rejected</field>
+            <field name="wkf_id" ref="wkf_mission"/>
+            <field name="kind">function</field>
+            <field name="action">action_reject()</field>
+        </record>
+
+        <!-- Transitions -->
+        <record model="workflow.transition" id="mission_draft_to_approve">
+            <field name="act_from" ref="draft"/>
+            <field name="act_to" ref="to_approve"/>
+            <field name="signal">to approve</field>
+        </record>
+        <record model="workflow.transition" id="mission_approve_to_approved">
+            <field name="act_from" ref="to_approve"/>
+            <field name="act_to" ref="approved"/>
+            <field name="signal">approved</field>
+        </record>
+        <record model="workflow.transition" id="mission_approve_to_rejected">
+            <field name="act_from" ref="to_approve"/>
+            <field name="act_to" ref="rejected"/>
+            <field name="signal">rejected</field>
+        </record>
+
+        <!-- Server action-->
+        <record model="ir.actions.server" id="set_mission_to_draft">
+            <field name="name">Set mission to Draft</field>
+            <field name="model_id" ref="model_hr_mission"/>
+            <field name="code">
+                model.search([('id', 'in', context['active_ids'])]).action_draft()
+            </field>
+        </record>
+        <record model="workflow.activity" id="draft">
+            <field name="name">Draft</field>
+            <field name="wkf_id" ref="wkf_mission"/>
+            <field name="flow_start" eval="True"/>
+            <field name="kind">dummy</field>
+            <field name="action"></field>
+            <field name="action_id" ref="set_mission_to_draft"/>
+        </record>
+
+        <record model="ir.actions.server" id="set_mission_to_approve">
+            <field name="name">Approve mission</field>
+            <field name="model_id" ref="model_hr_mission"/>
+            <field name="code">
+                model.search([('id', 'in', context['active_ids'])]).action_to_approve()
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="set_mission_to_approved">
+            <field name="name">Set mission to Approved</field>
+            <field name="model_id" ref="model_hr_mission"/>
+            <field name="code">
+                model.search([('id', 'in', context['active_ids'])]).action_approve()
+            </field>
+        </record>
+
+        <record model="workflow.activity" id="approved">
+            <field name="name">DApproved</field>
+            <field name="wkf_id" ref="wkf_mission"/>
+            <field name="flow_start" eval="True"/>
+            <field name="kind">dummy</field>
+            <field name="action"></field>
+            <field name="action_id" ref="set_mission_to_approved"/>
+        </record>
+
+        <record model="ir.actions.server" id="set_mission_to_reject">
+            <field name="name">Set mission to Rejected</field>
+            <field name="model_id" ref="model_hr_mission"/>
+            <field name="code">
+                model.search([('id', 'in', context['active_ids'])]).action_reject()
+            </field>
+        </record>
+    </data>
+</openerp>
